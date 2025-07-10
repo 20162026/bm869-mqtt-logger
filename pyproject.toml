@@ -1,0 +1,15 @@
+[project]
+name = "bm869-mqtt-logger"
+version = "0.1.0"
+readme = "README.md"
+requires-python = ">=3.13"
+dependencies = [
+    "hid>=1.0.8",
+    "paho-mqtt>=2.1.0",
+    "pydantic-settings>=2.10.1",
+]
+
+
+[tool.ruff]
+# exclude 3rd party library
+exclude = ["BM869S.py"]
