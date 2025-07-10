@@ -23,6 +23,7 @@ class Settings(BaseSettings):
     mqtt_pass: str = ""
     mqtt_topic: str
     mqtt_line_proto_measurement: str
+    mqtt_send_interval: int = 10  # seconds
 
 
 def on_connect(mqttc, obj, flags, reason_code, properties):
@@ -98,8 +99,8 @@ def main():
                         logger.warning(f"Failed to publish message: {ret.rc}")
 
                 elapsed = (perf_counter() - start) - now
-                if elapsed < 1:
-                    sleep(1 - elapsed)
+                if elapsed < settings.mqtt_send_interval:
+                    sleep(settings.mqtt_send_interval - elapsed)
         except KeyboardInterrupt:
             break
         except Exception as e:
