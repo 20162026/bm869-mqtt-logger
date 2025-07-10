@@ -1,4 +1,5 @@
-# import BM869S
+# SPDX-License-Identifier: MIT
+
 from BM869S import BM869S
 from time import sleep, perf_counter
 import paho.mqtt.client as mqtt
