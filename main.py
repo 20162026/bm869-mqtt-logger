@@ -24,6 +24,7 @@ class Settings(BaseSettings):
     mqtt_topic: str
     mqtt_line_proto_measurement: str
     mqtt_send_interval: int = 10  # seconds
+    mqtt_ca_cert: str = ""  # path to CA certificate for MQTT over TLS
 
 
 def on_connect(mqttc, obj, flags, reason_code, properties):
@@ -35,8 +36,12 @@ def connect_uri(client: mqtt.Client, settings: Settings):
     default_port = 1883
 
     if uri.scheme == "mqtts":
-        client.tls_set_context()
-        client.tls_insecure_set(True)
+        if not settings.mqtt_ca_cert or settings.mqtt_ca_cert == "":
+            client.tls_set()
+        elif settings.mqtt_ca_cert == "skip":
+            client.tls_set(cert_reqs=mqtt.ssl.CERT_NONE)
+        else:
+            client.tls_set(ca_certs=settings.mqtt_ca_cert)
         default_port = 8883
 
     if settings.mqtt_user and settings.mqtt_pass:
